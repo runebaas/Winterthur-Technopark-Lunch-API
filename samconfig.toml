@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "wtr-lunch-lambda"
+s3_bucket = "boerlage-lambda-artifacts"
+s3_prefix = "wtr-lunch-lambda"
+region = "eu-west-1"
+profile = "boerlage"
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"

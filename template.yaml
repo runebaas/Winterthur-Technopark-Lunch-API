@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: WTR Lunch
+
+Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: "'*'"
+      Domain:
+        CertificateArn: !ImportValue AwsBoerlageCertificate
+        DomainName: lunch.aws.boerlage.me
+        Route53:
+          HostedZoneId: !ImportValue AwsBoerlageZoneId
+          IpV6: true
+
+  Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src
+      Handler: app.handler
+      Runtime: nodejs12.x
+      Timeout: 10
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+            RestApiId: !Ref ApiGatewayApi
+
+Outputs:
+  FunctionArn:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt Lambda.Arn
+  RoleArn:
+    Description: "Implicit IAM Role created for function"
+    Value: !GetAtt LambdaRole.Arn

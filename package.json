@@ -1,0 +1,40 @@
+{
+  "name": "lambda-scratch-ts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start:unix": "webpack --watch & sam local start-api --profile boerlage --region eu-west-1 -p 8080",
+    "start:windows": "start /B webpack --watch & sam local start-api --profile boerlage --region eu-west-1 -p 8080",
+    "build": "webpack",
+    "build:prod": "cross-env NODE_ENV=production webpack",
+    "deploy": "yarn build:prod && sam deploy"
+  },
+  "dependencies": {
+    "@wasm-tool/wasm-pack-plugin": "^1.1.0",
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.41",
+    "@types/cheerio": "^0.22.16",
+    "@types/node": "13.7.6",
+    "@types/terser-webpack-plugin": "2.2.0",
+    "@types/webpack": "4.41.6",
+    "@typescript-eslint/eslint-plugin": "^2.21.0",
+    "@typescript-eslint/parser": "^2.21.0",
+    "awesome-typescript-loader": "5.2.1",
+    "aws-sam-webpack-plugin": "0.5.1",
+    "cross-env": "7.0.0",
+    "eslint": "^6.8.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-unicorn": "^16.1.1",
+    "terser-webpack-plugin": "2.3.5",
+    "ts-node": "8.6.2",
+    "typescript": "3.8.2",
+    "webpack": "4.41.6",
+    "webpack-cli": "3.3.11"
+  }
+}
