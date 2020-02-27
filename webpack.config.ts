@@ -4,6 +4,7 @@ import { CheckerPlugin } from 'awesome-typescript-loader';
 // doesn't want to be resolved properly using the es-module syntax
 const TerserPlugin = require('terser-webpack-plugin');
 const AwsSamPlugin = require('aws-sam-webpack-plugin');
+const WasmPackPlugin = require('@wasm-tool/wasm-pack-plugin');
 
 const awsSamPlugin = new AwsSamPlugin({ vscodeDebug: false });
 
@@ -14,16 +15,20 @@ const config: webpack.Configuration = {
   target: 'node',
   entry: () => awsSamPlugin.entry(),
   output: {
-    filename: '[name]/app.js',
+    filename: 'app.js',
     libraryTarget: 'commonjs2',
-    path: `${__dirname}/.aws-sam/build/`
+    path: `${__dirname}/.aws-sam/build/Lambda`
   },
   resolve: {
-    extensions: [ '.ts', '.js' ]
+    extensions: [ '.ts', '.js', '.wasm' ]
   },
   externals: isProduction ? [ 'aws-sdk' ] : [],
   plugins: [
     new CheckerPlugin(),
+    new WasmPackPlugin({
+      crateDirectory: __dirname,
+      extraArgs: '--target bundler'
+    }),
     awsSamPlugin
   ],
   optimization: {
@@ -45,6 +50,10 @@ const config: webpack.Configuration = {
             'src/**/*.ts'
           ]
         }
+      },
+      {
+        test: /\.wasm$/,
+        type: 'webassembly/experimental'
       }
     ]
   }

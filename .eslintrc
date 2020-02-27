@@ -787,6 +787,9 @@
     "@typescript-eslint/no-parameter-properties": [
       "error"
     ],
+    "@typescript-eslint/ban-ts-ignore": [
+      "off"
+    ],
     "import/no-unresolved": [
       "off"
     ]

@@ -1,10 +1,10 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
+AWSTemplateFormatVersion: 2010-09-09
+Transform: 'AWS::Serverless-2016-10-31'
 Description: WTR Lunch
 
 Resources:
   ApiGatewayApi:
-    Type: AWS::Serverless::Api
+    Type: 'AWS::Serverless::Api'
     Properties:
       StageName: Prod
       Cors: "'*'"
@@ -16,12 +16,12 @@ Resources:
           IpV6: true
 
   Lambda:
-    Type: AWS::Serverless::Function
+    Type: 'AWS::Serverless::Function'
     Properties:
       CodeUri: ./src
       Handler: app.handler
       Runtime: nodejs12.x
-      Timeout: 10
+      Timeout: 25
       Events:
         HelloWorld:
           Type: Api
@@ -32,8 +32,8 @@ Resources:
 
 Outputs:
   FunctionArn:
-    Description: "Lambda Function ARN"
+    Description: Lambda Function ARN
     Value: !GetAtt Lambda.Arn
   RoleArn:
-    Description: "Implicit IAM Role created for function"
+    Description: Implicit IAM Role created for function
     Value: !GetAtt LambdaRole.Arn
