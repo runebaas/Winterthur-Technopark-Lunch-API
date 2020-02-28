@@ -51,5 +51,4 @@ export async function addMenusToDb(location: Location, date: Date, menu: object)
       }
     }
   }).promise();
-  console.info('WRITTEN!!!');
 }

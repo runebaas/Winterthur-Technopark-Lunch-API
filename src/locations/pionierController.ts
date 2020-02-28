@@ -1,4 +1,3 @@
-import { URL } from 'url';
 import { APIGatewayEvent } from 'aws-lambda';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -6,7 +5,7 @@ import { formatISO, parseISO } from 'date-fns';
 import { ApiResponse } from '../api';
 import { LocationMenu, LocationResponse } from '../sharedModels';
 import { addMenusToDb, getMenusFromDb } from '../db';
-import { Location } from '../locations';
+import { Location, locationInformation } from '../locations';
 
 async function parseMenu(date: Date, formattedDate: string): Promise<object[]> {
   const res = await axios.get('https://zfv.ch/de/microsites/restaurant-pionier/menueplan');
@@ -69,7 +68,7 @@ export async function getPionierMenu(event: APIGatewayEvent): Promise<ApiRespons
   return {
     statusCode: 200,
     body: {
-      name: 'Pionier (AXA)',
+      name: locationInformation[Location.Pionier].name,
       date: formattedDate,
       menus: menus
     }
