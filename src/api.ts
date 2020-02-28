@@ -117,7 +117,7 @@ export class Api {
   }
 }
 
-export type ApiRequest = ((event: APIGatewayEvent, context: Context) => ApiResponse) | ((event: APIGatewayEvent, context: Context) => Promise<ApiResponse>);
+export type ApiRequest<R = any> = ((event: APIGatewayEvent, context: Context) => ApiResponse<R>) | ((event: APIGatewayEvent, context: Context) => Promise<ApiResponse<R>>);
 export type EventRequest<E, R> = ((event: E, context: Context) => R) | ((event: E, context: Context) => Promise<R>);
 
 type ApiRequestMap = Record<string, ApiRequest>;

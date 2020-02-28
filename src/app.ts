@@ -3,10 +3,11 @@ import { getPionierMenu } from './locations/pionierController';
 import { getSkillsparkMenu } from './locations/skillsparkController';
 import { loadWasm } from './wasmLoader';
 import { locationInformation, Location } from './locations';
+import { LocationResponse } from './sharedModels';
 
 const api = new Api({});
 
-const locations: Record<string, { controller: ApiRequest; locationKey: Location }> = {
+const locations: Record<string, { controller: ApiRequest<LocationResponse>; locationKey: Location }> = {
   '/location/pionier': {
     locationKey: Location.Pionier,
     controller: getPionierMenu
