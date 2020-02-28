@@ -1,4 +1,4 @@
-function internalLoad(bin: typeof import('../pkg')) {
+function internalLoad(bin: typeof import('../pkg')): typeof import('../pkg') {
   return bin;
 }
 

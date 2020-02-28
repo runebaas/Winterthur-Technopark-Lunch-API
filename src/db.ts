@@ -1,7 +1,7 @@
 import { DynamoDB } from 'aws-sdk';
-import { AttributeMap } from 'aws-sdk/clients/dynamodb';
 import { formatISO } from 'date-fns';
 import { Location } from './locations';
+import { LocationMenu } from './sharedModels';
 
 const tableName = 'WtrLunchMenus';
 let internalDbClient: DynamoDB;
@@ -19,7 +19,7 @@ function createLocationId(location: string, date: Date): string {
   return `${location}-${formatISO(date, { representation: 'date' })}`;
 }
 
-export async function getMenusFromDb<T>(location: Location, date: Date): Promise<T|undefined> {
+export async function getMenusFromDb(location: Location, date: Date): Promise<LocationMenu[]|undefined> {
   const database = getDynamoDbClient();
 
   const result = await database.getItem({
@@ -32,13 +32,13 @@ export async function getMenusFromDb<T>(location: Location, date: Date): Promise
   }).promise();
 
   if (result.Item?.Menus.S) {
-    return JSON.parse(result.Item.Menus.S) as T;
+    return JSON.parse(result.Item.Menus.S);
   }
 
   return undefined;
 }
 
-export async function addMenusToDb(location: Location, date: Date, menu: object): Promise<void> {
+export async function addMenusToDb(location: Location, date: Date, menu: LocationMenu[]): Promise<void> {
   const database = getDynamoDbClient();
   await database.putItem({
     TableName: tableName,

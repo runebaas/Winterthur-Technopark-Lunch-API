@@ -7,7 +7,7 @@ import { LocationMenu, LocationResponse } from '../sharedModels';
 import { addMenusToDb, getMenusFromDb } from '../db';
 import { Location, locationInformation } from '../locations';
 
-async function parseMenu(date: Date, formattedDate: string): Promise<object[]> {
+async function parseMenu(date: Date, formattedDate: string): Promise<LocationMenu[]> {
   const res = await axios.get('https://zfv.ch/de/microsites/restaurant-pionier/menueplan');
 
   const document = cheerio.load(res.data);
@@ -22,7 +22,7 @@ async function parseMenu(date: Date, formattedDate: string): Promise<object[]> {
       .filter(element => element !== '');
   });
 
-  const menus = Object
+  const menus: LocationMenu[] = Object
     .entries(resp)
     .map(([ name, details ]): LocationMenu => {
       const [ price ] = details.splice(-1);

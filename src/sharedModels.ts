@@ -6,6 +6,6 @@ export interface LocationResponse {
 
 export interface LocationMenu {
   name: string;
-  price: string;
+  price?: string;
   details: string[];
 }

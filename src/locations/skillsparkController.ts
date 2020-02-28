@@ -3,12 +3,12 @@ import axios from 'axios';
 import { formatISO, parse, parseISO } from 'date-fns';
 import deLocale from 'date-fns/locale/de';
 import { ApiResponse } from '../api';
-import { LocationResponse } from '../sharedModels';
+import { LocationMenu, LocationResponse } from '../sharedModels';
 import { loadWasm } from '../wasmLoader';
 import { addMenusToDb, getMenusFromDb } from '../db';
 import { Location, locationInformation } from '../locations';
 
-async function parseMenu(date: Date): Promise<object[]> {
+async function parseMenu(date: Date): Promise<LocationMenu[]> {
   const { parseSkillsparkPdf } = await loadWasm();
 
   const docBuffer = await axios.get<ArrayBuffer>('https://skillspark.ch/images/menu.pdf', { responseType: 'arraybuffer' });
@@ -18,7 +18,7 @@ async function parseMenu(date: Date): Promise<object[]> {
 
   for (const day of [ weeklyMenus.montag, weeklyMenus.dienstag, weeklyMenus.mitwoch, weeklyMenus.donnerstag, weeklyMenus.freitag ]) {
     const dayDate = parse(day.tag, 'EEEE dd. LLLL yyyy', Date.now(), { locale: deLocale });
-    const menus = [
+    const menus: LocationMenu[] = [
       {
         name: 'traditionell',
         details: day.traditionell
