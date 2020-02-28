@@ -1,28 +1,35 @@
-import { Api } from './api';
+import { Api, ApiRequest } from './api';
 import { getPionierMenu } from './locations/pionierController';
 import { getSkillsparkMenu } from './locations/skillsparkController';
 import { loadWasm } from './wasmLoader';
-import { LocationDescription } from './sharedModels';
+import { locationInformation, Location } from './locations';
 
 const api = new Api({});
 
-const locations: Record<string, LocationDescription> = {
-  'Kantine Pionier (AXA)': {
-    path: '/location/pionier',
+const locations: Record<string, { controller: ApiRequest; locationKey: Location }> = {
+  '/location/pionier': {
+    locationKey: Location.Pionier,
     controller: getPionierMenu
   },
-  'Skills Park': {
-    path: '/location/skillspark',
+  '/location/skillspark': {
+    locationKey: Location.Skillspark,
     controller: getSkillsparkMenu
   }
 };
 
-Object.values(locations).forEach(loc => api.get(loc.path, loc.controller));
+Object.entries(locations).forEach(([ path, { controller } ]) => api.get(path, controller));
 
 api.get('/location', event => ({
   statusCode: 200,
   body: {
-    locations: Object.fromEntries(Object.entries(locations).map(([ name, loc ]) => ([ name, `https://${event.headers.Host}${loc.path}` ])))
+    locations: Object.entries(locations).reduce((result, [ path, { locationKey } ]) => {
+      result[locationKey] = {
+        href: `https://${event.headers.Host}${path}`,
+        details: locationInformation[locationKey]
+      };
+
+      return result;
+    }, {} as any)
   }
 }));
 

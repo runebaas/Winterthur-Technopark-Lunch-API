@@ -22,6 +22,9 @@ Resources:
       Handler: app.handler
       Runtime: nodejs12.x
       Timeout: 25
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LunchTable
       Events:
         HelloWorld:
           Type: Api
@@ -29,6 +32,14 @@ Resources:
             Path: /{proxy+}
             Method: any
             RestApiId: !Ref ApiGatewayApi
+
+  LunchTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: WtrLunchMenus
+      PrimaryKey:
+        Name: LocationDateId
+        Type: String
 
 Outputs:
   FunctionArn:

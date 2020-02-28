@@ -129,7 +129,7 @@ type ApiRoutes = {[method in ApiMethods]: ApiRequestMap};
 export interface ApiResponse<T = unknown> {
   statusCode: number;
   headers?: Record<string, string>;
-  body?: T | ApiResponseDefault;
+  body?: T | ApiResponseDefault | object;
 }
 
 interface ApiResponseDefault {

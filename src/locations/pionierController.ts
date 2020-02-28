@@ -2,25 +2,19 @@ import { URL } from 'url';
 import { APIGatewayEvent } from 'aws-lambda';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { formatISO, parseISO } from 'date-fns';
 import { ApiResponse } from '../api';
 import { LocationMenu, LocationResponse } from '../sharedModels';
+import { addMenusToDb, getMenusFromDb } from '../db';
+import { Location } from '../locations';
 
-function getTodaysDate(): string {
-  const now = new Date();
-
-  return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString()
-    .padStart(2, '0')}`;
-}
-
-export async function getPionierMenu(event: APIGatewayEvent): Promise<ApiResponse<LocationResponse>> {
-  const date = new URL(event.path, 'http://localhost').searchParams.get('date') || getTodaysDate();
+async function parseMenu(date: Date, formattedDate: string): Promise<object[]> {
   const res = await axios.get('https://zfv.ch/de/microsites/restaurant-pionier/menueplan');
 
-  // todo: cheerio loads super slow on lambda, possibly cache the response in dynamodb?
   const document = cheerio.load(res.data);
 
   const resp: PionierResponse = {};
-  document(`tr[data-date="${date}"]`).each((index, data) => {
+  document(`tr[data-date="${formattedDate}"]`).each((index, data) => {
     const name = data.childNodes[1]?.childNodes[0]?.data?.trim() ?? index;
     const menuElement = data.childNodes[3]?.childNodes[1]?.childNodes ?? [ { type: 'tag' } ];
     resp[name] = menuElement
@@ -42,11 +36,41 @@ export async function getPionierMenu(event: APIGatewayEvent): Promise<ApiRespons
     })
     .filter(menu => menu.name.toLowerCase() !== 'news');
 
+  await addMenusToDb(Location.Pionier, date, menus);
+
+  return menus;
+}
+
+export async function getPionierMenu(event: APIGatewayEvent): Promise<ApiResponse<LocationResponse>> {
+  const dateParam = event.queryStringParameters?.date;
+  let date: Date;
+  if (dateParam) {
+    try {
+      date = parseISO(dateParam);
+    } catch {
+      return {
+        statusCode: 400,
+        body: {
+          message: 'Query Parameter "date" must have the following format: YYYY-MM-DD'
+        }
+      };
+    }
+  } else {
+    date = new Date();
+  }
+
+  let menus = await getMenusFromDb(Location.Pionier, date);
+
+  const formattedDate = formatISO(date, { representation: 'date' });
+  if (!menus) {
+    menus = await parseMenu(date, formattedDate);
+  }
+
   return {
     statusCode: 200,
     body: {
       name: 'Pionier (AXA)',
-      date: date,
+      date: formattedDate,
       menus: menus
     }
   };
