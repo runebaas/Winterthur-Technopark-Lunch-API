@@ -1,14 +1,12 @@
-import { APIGatewayEvent } from 'aws-lambda';
 import axios from 'axios';
-import { formatISO, parse, parseISO } from 'date-fns';
+import { parse } from 'date-fns';
 import deLocale from 'date-fns/locale/de';
-import { ApiResponse } from '../api';
-import { LocationMenu, LocationResponse } from '../sharedModels';
-import { loadWasm } from '../wasmLoader';
-import { addMenusToDb, getMenusFromDb } from '../db';
-import { Location, locationInformation } from '../locations';
+import { LocationMenu } from '../sharedModels';
+import { loadWasm } from '../utils/wasmLoader';
+import { addMenusToDb, getMenusFromDb } from '../utils/db';
+import { Location } from '../locations';
 
-async function parseMenu(date: Date): Promise<LocationMenu[]> {
+export async function parseMenu(date: Date): Promise<LocationMenu[]> {
   const { parseSkillsparkPdf } = await loadWasm();
 
   const docBuffer = await axios.get<ArrayBuffer>('https://skillspark.ch/images/menu.pdf', { responseType: 'arraybuffer' });
@@ -37,41 +35,6 @@ async function parseMenu(date: Date): Promise<LocationMenu[]> {
   }
 
   return await getMenusFromDb(Location.Skillspark, date) ?? [];
-}
-
-export async function getSkillsparkMenu(event: APIGatewayEvent): Promise<ApiResponse<LocationResponse>> {
-  const dateParam = event.queryStringParameters?.date;
-  let date: Date;
-  if (dateParam) {
-    try {
-      date = parseISO(dateParam);
-    } catch {
-      return {
-        statusCode: 400,
-        body: {
-          message: 'Query Parameter "date" must have the following format: YYYY-MM-DD'
-        }
-      };
-    }
-  } else {
-    date = new Date();
-  }
-
-  let menus = await getMenusFromDb(Location.Skillspark, date);
-
-  const formattedDate = formatISO(date, { representation: 'date' });
-  if (!menus) {
-    menus = await parseMenu(date);
-  }
-
-  return {
-    statusCode: 200,
-    body: {
-      name: locationInformation[Location.Skillspark].name,
-      date: formattedDate,
-      menus: menus
-    }
-  };
 }
 
 interface Week {

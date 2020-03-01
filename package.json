@@ -8,7 +8,8 @@
     "start:windows": "start /B webpack --watch & sam local start-api --profile boerlage --region eu-west-1 -p 8080",
     "build": "webpack",
     "build:prod": "cross-env NODE_ENV=production webpack",
-    "deploy": "yarn build:prod && sam deploy"
+    "deploy": "yarn build:prod && sam deploy",
+    "lint": "eslint ./src/**/*.ts"
   },
   "dependencies": {
     "@wasm-tool/wasm-pack-plugin": "^1.1.0",

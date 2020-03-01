@@ -7,7 +7,5 @@ cfg_if! {
     }
 }
 
-mod pdf;
-
 pub mod skillspark;
 pub mod wasm_test;

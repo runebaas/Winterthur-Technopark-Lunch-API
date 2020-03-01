@@ -1,9 +1,9 @@
-function internalLoad(bin: typeof import('../pkg')): typeof import('../pkg') {
+function internalLoad(bin: typeof import('../../pkg')): typeof import('../../pkg') {
   return bin;
 }
 
 export async function loadWasm(): Promise<WasmBinary> {
-  const wasm = internalLoad(await import(/* webpackChunkName: "wasmPkg" */'../pkg'));
+  const wasm = internalLoad(await import(/* webpackChunkName: "wasmPkg" */'../../pkg'));
 
   return {
     parseSkillsparkPdf: wasm.parse_skillspark_pdf,

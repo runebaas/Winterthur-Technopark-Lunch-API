@@ -1,7 +1,7 @@
 import { DynamoDB } from 'aws-sdk';
 import { formatISO } from 'date-fns';
-import { Location } from './locations';
-import { LocationMenu } from './sharedModels';
+import { Location } from '../locations';
+import { LocationMenu } from '../sharedModels';
 
 const tableName = 'WtrLunchMenus';
 let internalDbClient: DynamoDB;

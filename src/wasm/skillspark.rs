@@ -2,7 +2,7 @@ use wasm_bindgen::prelude::*;
 use lopdf::Document;
 use std::error::Error;
 use serde::Serialize;
-use crate::pdf::{output_doc, PlainTextOutput};
+use pdf_extract::{output_doc, PlainTextOutput};
 
 // #[wasm_bindgen]
 // extern "C" {
