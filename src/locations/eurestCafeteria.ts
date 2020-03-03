@@ -31,30 +31,30 @@ export async function parseMenu(date: Date): Promise<LocationMenu[]> {
   const result = await parseEurestCafeteriaPdf(new Uint8Array(docBuffer.data));
   const weeklyMenus = JSON.parse(result) as Week;
 
-  const menuOrderResult = weeklyMenus.menuOrder?.matchAll(/(?<name>Tageshit\s*|Menü\s*|Vegi\s*)(?<price>(pro\s*100\s*gr\s*)?CHF\s*\d+,\d+)/gu)
-  const menuOrder = [...menuOrderResult];
+  const menuOrderResult = weeklyMenus.menuOrder?.matchAll(/(?<name>Tageshit\s*|Menü\s*|Vegi\s*)(?<price>(pro\s*100\s*gr\s*)?CHF\s*\d+,\d+)/gu);
+  const menuOrder = [ ...menuOrderResult ];
 
   const res: Record<string, LocationMenu[]> = {};
   for (const day of [ weeklyMenus.montag, weeklyMenus.dienstag, weeklyMenus.mitwoch, weeklyMenus.donnerstag, weeklyMenus.freitag ]) {
-    if(!day.tag) {
+    if (!day.tag) {
       continue;
     }
     const dayDate = parse(day.tag, 'EEEE d. LLLL', Date.now(), { locale: deLocale });
     const menus: LocationMenu[] = [];
 
     for (const orderId in menuOrder) {
-      const groups = menuOrder[orderId].groups
-      if(!groups) {
+      const { groups } = menuOrder[orderId];
+      if (!groups) {
         continue;
       }
       menus.push({
         name: groups.name,
         price: groups.price,
         details: day.menus[orderId]
-      })
+      });
     }
 
-    const formattedDayDate = formatISO(dayDate, {representation: 'date'})
+    const formattedDayDate = formatISO(dayDate, { representation: 'date' });
     res[formattedDayDate] = menus;
 
     await addMenusToDb(Location.EurestCafeteria, dayDate, menus);

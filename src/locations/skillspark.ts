@@ -16,35 +16,35 @@ export async function parseMenu(date: Date): Promise<LocationMenu[]> {
 
   const daily: LocationMenu[] = [];
   for (const item of weeklyMenus.taglich) {
-    const itemRegexResult = item.match(/(?<name>.+)\s(?<price>CHF\s*\d+.\d+)/);
-    if(!itemRegexResult?.groups) {
+    const itemRegexResult = item.match(/(?<name>.+)\s(?<price>CHF\s*\d+.\d+)/u);
+    if (!itemRegexResult?.groups) {
       continue;
     }
     daily.push({
       name: itemRegexResult.groups.name,
       price: itemRegexResult.groups.price,
       details: []
-    })
+    });
   }
 
   for (const day of [ weeklyMenus.montag, weeklyMenus.dienstag, weeklyMenus.mitwoch, weeklyMenus.donnerstag, weeklyMenus.freitag ]) {
     const dayDate = parse(day.tag, 'EEEE dd. LLLL yyyy', Date.now(), { locale: deLocale });
-    const menus: LocationMenu[] = []
+    const menus: LocationMenu[] = [];
 
-    for (const menu of [day.traditionell, day.vegetarisch]) {
-      const [info, ...details] = menu;
-      const splitInfo = info.match(/(?<name>.+)\s(?<price>CHF\s*\d+.\d+)/);
+    for (const menu of [ day.traditionell, day.vegetarisch ]) {
+      const [ info, ...details ] = menu;
+      const splitInfo = info.match(/(?<name>.+)\s(?<price>CHF\s*\d+.\d+)/u);
       if (splitInfo?.groups) {
         menus.push({
           name: splitInfo.groups.name,
           price: splitInfo.groups.price,
           details: details
-        })
+        });
       } else {
         menus.push({
           name: info,
           details: details
-        })
+        });
       }
     }
 

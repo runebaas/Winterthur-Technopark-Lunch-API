@@ -535,9 +535,6 @@
     "no-bitwise": [
       "error"
     ],
-    "no-continue": [
-      "error"
-    ],
     "no-lonely-if": [
       "error"
     ],
