@@ -8,4 +8,3 @@ cfg_if! {
 }
 
 pub mod skillspark;
-pub mod wasm_test;

@@ -23,17 +23,5 @@ api.get('/location', event => ({
   }
 }));
 
-api.get('/wasm', async () => {
-  const wasm = await loadWasm();
-  const response = wasm.stuff('test');
-
-  return {
-    statusCode: 200,
-    body: {
-      message: response
-    }
-  };
-});
-
 // eslint-disable-next-line prefer-destructuring
 export const handler = api.handler;

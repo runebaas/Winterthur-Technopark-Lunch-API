@@ -6,12 +6,10 @@ export async function loadWasm(): Promise<WasmBinary> {
   const wasm = internalLoad(await import(/* webpackChunkName: "wasmPkg" */'../../pkg'));
 
   return {
-    parseSkillsparkPdf: wasm.parse_skillspark_pdf,
-    stuff: wasm.stuff
+    parseSkillsparkPdf: wasm.parse_skillspark_pdf
   };
 }
 
 interface WasmBinary {
   parseSkillsparkPdf(fileContent: Uint8Array): Promise<Uint8Array>;
-  stuff(stuff: string): string;
 }
