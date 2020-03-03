@@ -14,22 +14,41 @@ export async function parseMenu(date: Date): Promise<LocationMenu[]> {
   const result = await parseSkillsparkPdf(new Uint8Array(docBuffer.data));
   const weeklyMenus = JSON.parse(result) as Week;
 
+  const daily: LocationMenu[] = [];
+  for (const item of weeklyMenus.taglich) {
+    const itemRegexResult = item.match(/(?<name>.+)\s(?<price>CHF\s*\d+.\d+)/);
+    if(!itemRegexResult?.groups) {
+      continue;
+    }
+    daily.push({
+      name: itemRegexResult.groups.name,
+      price: itemRegexResult.groups.price,
+      details: []
+    })
+  }
+
   for (const day of [ weeklyMenus.montag, weeklyMenus.dienstag, weeklyMenus.mitwoch, weeklyMenus.donnerstag, weeklyMenus.freitag ]) {
     const dayDate = parse(day.tag, 'EEEE dd. LLLL yyyy', Date.now(), { locale: deLocale });
-    const menus: LocationMenu[] = [
-      {
-        name: 'traditionell',
-        details: day.traditionell
-      },
-      {
-        name: 'vegetarisch',
-        details: day.vegetarisch
-      },
-      {
-        name: 'täglich',
-        details: weeklyMenus.taglich
+    const menus: LocationMenu[] = []
+
+    for (const menu of [day.traditionell, day.vegetarisch]) {
+      const [info, ...details] = menu;
+      const splitInfo = info.match(/(?<name>.+)\s(?<price>CHF\s*\d+.\d+)/);
+      if (splitInfo?.groups) {
+        menus.push({
+          name: splitInfo.groups.name,
+          price: splitInfo.groups.price,
+          details: details
+        })
+      } else {
+        menus.push({
+          name: info,
+          details: details
+        })
       }
-    ];
+    }
+
+    menus.push(...daily);
 
     await addMenusToDb(Location.Skillspark, dayDate, menus);
   }
