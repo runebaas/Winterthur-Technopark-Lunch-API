@@ -1,9 +1,12 @@
 import { Api } from './utils/api';
-import { loadWasm } from './utils/wasmLoader';
 import { locationInformation, Location } from './locations';
 import { LocationsController } from './controllers/locationsController';
 
-const api = new Api({});
+const api = new Api({
+  defaultHeaders: {
+    'Access-Control-Allow-Origin': '*'
+  }
+});
 
 const locationsController = new LocationsController(locationInformation);
 
