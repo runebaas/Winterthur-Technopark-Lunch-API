@@ -31,7 +31,7 @@ export async function parseMenu(date: Date): Promise<LocationMenu[]> {
   const result = await parseEurestCafeteriaPdf(new Uint8Array(docBuffer.data));
   const weeklyMenus = JSON.parse(result) as Week;
 
-  const menuOrderResult = weeklyMenus.menuOrder?.matchAll(/(?<name>Tageshitpro\s*100\s*gr\s*|Menü\s*|Vegi\s*)(?<price>CHF\s*\d+,\d+)/gu)
+  const menuOrderResult = weeklyMenus.menuOrder?.matchAll(/(?<name>Tageshit\s*|Menü\s*|Vegi\s*)(?<price>(pro\s*100\s*gr\s*)?CHF\s*\d+,\d+)/gu)
   const menuOrder = [...menuOrderResult];
 
   const res: Record<string, LocationMenu[]> = {};
@@ -48,7 +48,7 @@ export async function parseMenu(date: Date): Promise<LocationMenu[]> {
         continue;
       }
       menus.push({
-        name: groups.name.toLowerCase().startsWith('tageshit') ? 'Tageshit' : groups.name,
+        name: groups.name,
         price: groups.price,
         details: day.menus[orderId]
       })
