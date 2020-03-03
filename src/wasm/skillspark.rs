@@ -1,15 +1,7 @@
 use wasm_bindgen::prelude::*;
-use lopdf::Document;
 use std::error::Error;
 use serde::Serialize;
-use pdf_extract::{output_doc, PlainTextOutput};
-
-// #[wasm_bindgen]
-// extern "C" {
-//     // console.log()
-//     #[wasm_bindgen(js_namespace = console)]
-//     fn log(s: &str);
-// }
+use crate::utils::load_pdf;
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -35,14 +27,7 @@ struct Menu {
 
 #[wasm_bindgen]
 pub async fn parse_skillspark_pdf(file_content: Vec<u8>) -> String {
-    let mut content = String::new();
-    {
-        let mut output = PlainTextOutput::new(&mut content);
-
-        let doc = Document::load_mem(&file_content).expect("Failed to load doc");
-
-        output_doc(&doc, &mut output).expect("Failed extract data from doc");
-    }
+    let content = load_pdf(file_content);
 
     let lines = content
         .lines()

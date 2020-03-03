@@ -7,4 +7,7 @@ cfg_if! {
     }
 }
 
+mod utils;
+
 pub mod skillspark;
+pub mod eurest_cafeteria;

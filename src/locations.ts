@@ -1,11 +1,13 @@
 import { LocationMenu } from './sharedModels';
 import { parseMenu as parseSkillsparkMenu } from './locations/skillspark';
 import { parseMenu as parsePionierMenu } from './locations/pionier';
+import { parseMenu as parseEurestCafeteriaMenu } from './locations/eurestCafeteria';
 
 // These are used as the database key, do not change!
 export enum Location {
   Pionier = 'pionier',
-  Skillspark = 'skillspark'
+  Skillspark = 'skillspark',
+  EurestCafeteria = 'eurestCafeteria'
 }
 
 export const locationInformation: Record<Location, LocationMeta> = {
@@ -23,6 +25,14 @@ export const locationInformation: Record<Location, LocationMeta> = {
     info: {
       name: 'Kantine Skills Park',
       website: 'https://skillspark.ch/index.php'
+    }
+  },
+  [Location.EurestCafeteria]: {
+    endpoint: '/location/eurest-cafeteria',
+    parser: parseEurestCafeteriaMenu,
+    info: {
+      name: 'Eurest Cafeteria Technopark',
+      website: 'https://tpw.ch/angebot/essen-trinken/'
     }
   }
 };
