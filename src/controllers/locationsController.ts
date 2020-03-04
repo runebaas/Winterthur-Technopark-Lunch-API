@@ -35,7 +35,8 @@ export class LocationsController {
 
     const formattedDate = formatISO(date, { representation: 'date' });
     if (!menus) {
-      menus = await locationData.parser(date, formattedDate);
+      const parser = await locationData.getParser();
+      menus = await parser(date, formattedDate);
     }
 
     return {

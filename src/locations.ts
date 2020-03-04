@@ -1,7 +1,4 @@
 import { LocationMenu } from './sharedModels';
-import { parseMenu as parseSkillsparkMenu } from './locations/skillspark';
-import { parseMenu as parsePionierMenu } from './locations/pionier';
-import { parseMenu as parseEurestCafeteriaMenu } from './locations/eurestCafeteria';
 
 // These are used as the database key, do not change!
 export enum Location {
@@ -13,7 +10,7 @@ export enum Location {
 export const locationInformation: Record<Location, LocationMeta> = {
   [Location.Pionier]: {
     endpoint: '/location/pionier',
-    parser: parsePionierMenu,
+    getParser: async () => (await import(/* webpackChunkName: "pionierParser" */'./locations/pionier')).parseMenu,
     info: {
       name: 'Kantine Pionier (AXA)',
       website: 'https://zfv.ch/de/microsites/restaurant-pionier/ueber-uns'
@@ -21,7 +18,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
   },
   [Location.Skillspark]: {
     endpoint: '/location/skillspark',
-    parser: parseSkillsparkMenu,
+    getParser: async () => (await import(/* webpackChunkName: "skillsparkParser" */'./locations/skillspark')).parseMenu,
     info: {
       name: 'Kantine Skills Park',
       website: 'https://skillspark.ch/index.php'
@@ -29,7 +26,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
   },
   [Location.EurestCafeteria]: {
     endpoint: '/location/eurest-cafeteria',
-    parser: parseEurestCafeteriaMenu,
+    getParser: async () => (await import(/* webpackChunkName: "eurestCafeteriaParser" */'./locations/eurestCafeteria')).parseMenu,
     info: {
       name: 'Eurest Cafeteria Technopark',
       website: 'https://tpw.ch/angebot/essen-trinken/'
@@ -39,7 +36,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
 
 export interface LocationMeta {
   endpoint: string;
-  parser: (date: Date, formattedDate: string) => Promise<LocationMenu[]>;
+  getParser: () => Promise<(date: Date, formattedDate: string) => Promise<LocationMenu[]>>;
   info: LocationInformation;
 }
 
