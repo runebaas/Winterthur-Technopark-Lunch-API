@@ -1,12 +1,13 @@
-import { LocationMenu, WeekDay } from './sharedModels';
-import { parseMenu as ThaiWaegeliMenu } from './locations/thaiWaegeli';
-import { parseMenu as LoStivaleMenu } from './locations/loStivale';
+import {LocationMenu, WeekDay} from './sharedModels';
+import {parseMenu as ThaiWaegeliMenu} from './locations/thaiWaegeli';
+import {parseMenu as LoStivaleMenu} from './locations/loStivale';
 
 // These are used as the database key, do not change!
 export enum Location {
   Pionier = 'pionier',
   Skillspark = 'skillspark',
   EurestCafeteria = 'eurestCafeteria',
+  CoopRestaurantLokwerk = 'coopRestaurantLokwerk',
   ThaiWaegeli = 'thaiWaegeli',
   LoStivale = 'loStivale'
 }
@@ -60,6 +61,16 @@ export const locationInformation: Record<Location, LocationMeta> = {
     info: {
       name: 'Lo Stivale (Pizza Wagen)',
       website: 'https://www.lostivale.ch/web/index.php'
+    }
+  },
+  [Location.CoopRestaurantLokwerk]: {
+    endpoint: '/location/coop-restaurant-lokwerk',
+    dynamic: true,
+    getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "coopRestaurantLokwerkParser" */'./locations/coopRestaurantLokwerk')).parseMenu,
+    days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday, WeekDay.Saturday ],
+    info: {
+      name: 'Coop Restaurant Lokwerk',
+      website: 'https://www.coop-restaurant.ch/de/menueseite.vst4221.restaurant.html'
     }
   }
 };
