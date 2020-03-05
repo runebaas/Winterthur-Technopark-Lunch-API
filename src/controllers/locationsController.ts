@@ -31,9 +31,13 @@ export class LocationsController {
     }
 
     const locationData = this.locations[location];
-    let menus = typeof event.queryStringParameters?.update === 'string' ? undefined : await getMenusFromDb(location, date);
-
     const formattedDate = formatISO(date, { representation: 'date' });
+    let menus;
+
+    if (locationData.dynamic && !(typeof event.queryStringParameters?.update === 'string')) {
+      menus = await getMenusFromDb(location, date);
+    }
+
     if (!menus) {
       const parser = await locationData.getParser();
       menus = await parser(date, formattedDate);
