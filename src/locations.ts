@@ -1,17 +1,19 @@
 import { LocationMenu, WeekDay } from './sharedModels';
+import { parseMenu as ThaiWaegeliMenu } from './locations/thaiWaegeli';
 
 // These are used as the database key, do not change!
 export enum Location {
   Pionier = 'pionier',
   Skillspark = 'skillspark',
-  EurestCafeteria = 'eurestCafeteria'
+  EurestCafeteria = 'eurestCafeteria',
+  ThaiWaegeli = 'thaiWaegeli'
 }
 
 export const locationInformation: Record<Location, LocationMeta> = {
   [Location.Pionier]: {
     endpoint: '/location/pionier',
     dynamic: true,
-    getParser: async () => (await import(/* webpackChunkName: "pionierParser" */'./locations/pionier')).parseMenu,
+    getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "pionierParser" */'./locations/pionier')).parseMenu,
     days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
     info: {
       name: 'Kantine Pionier (AXA)',
@@ -21,7 +23,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
   [Location.Skillspark]: {
     endpoint: '/location/skillspark',
     dynamic: true,
-    getParser: async () => (await import(/* webpackChunkName: "skillsparkParser" */'./locations/skillspark')).parseMenu,
+    getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "skillsparkParser" */'./locations/skillspark')).parseMenu,
     days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
     info: {
       name: 'Kantine Skills Park',
@@ -31,11 +33,21 @@ export const locationInformation: Record<Location, LocationMeta> = {
   [Location.EurestCafeteria]: {
     endpoint: '/location/eurest-cafeteria',
     dynamic: true,
-    getParser: async () => (await import(/* webpackChunkName: "eurestCafeteriaParser" */'./locations/eurestCafeteria')).parseMenu,
+    getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "eurestCafeteriaParser" */'./locations/eurestCafeteria')).parseMenu,
     days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
     info: {
       name: 'Eurest Cafeteria Technopark',
       website: 'https://tpw.ch/angebot/essen-trinken/'
+    }
+  },
+  [Location.ThaiWaegeli]: {
+    endpoint: '/location/thai-waegeli',
+    dynamic: false,
+    getParser: (): ParserFunction => ThaiWaegeliMenu,
+    days: [ WeekDay.Thursday ],
+    info: {
+      name: 'Thai Wägeli',
+      website: 'https://www.thai-waegeli.ch'
     }
   }
 };
@@ -43,10 +55,13 @@ export const locationInformation: Record<Location, LocationMeta> = {
 export interface LocationMeta {
   endpoint: string;
   dynamic: boolean;
-  getParser: () => Promise<(date: Date, formattedDate: string) => Promise<LocationMenu[]>>;
+  getParser: () => (ParserFunctionAsync|ParserFunction);
   days: WeekDay[];
   info: LocationInformation;
 }
+
+type ParserFunctionAsync = Promise<(date: Date, formattedDate: string) => Promise<LocationMenu[]>>;
+type ParserFunction = (date: Date, formattedDate: string) => LocationMenu[];
 
 export interface LocationInformation {
   name: string;
