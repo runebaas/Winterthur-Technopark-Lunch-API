@@ -31,16 +31,19 @@ export class LocationsController {
     }
 
     const locationData = this.locations[location];
+
     const formattedDate = formatISO(date, { representation: 'date' });
     let menus;
 
-    if (locationData.dynamic && !(typeof event.queryStringParameters?.update === 'string')) {
-      menus = await getMenusFromDb(location, date);
-    }
+    if (locationData.days.includes(date.getDay())) {
+      if (locationData.dynamic && !(typeof event.queryStringParameters?.update === 'string')) {
+        menus = await getMenusFromDb(location, date);
+      }
 
-    if (!menus) {
-      const parser = await locationData.getParser();
-      menus = await parser(date, formattedDate);
+      if (!menus) {
+        const parser = await locationData.getParser();
+        menus = await parser(date, formattedDate);
+      }
     }
 
     return {
@@ -48,7 +51,7 @@ export class LocationsController {
       body: {
         name: locationData.info.name,
         date: formattedDate,
-        menus: menus
+        menus: menus ?? []
       }
     };
   }
