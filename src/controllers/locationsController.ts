@@ -41,7 +41,6 @@ export class LocationsController {
       }
 
       if (!menus) {
-        console.info('parsing menus!');
         const parser = await locationData.getParser();
         menus = await parser(date, formattedDate);
       }

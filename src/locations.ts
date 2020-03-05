@@ -13,6 +13,26 @@ export enum Location {
 }
 
 export const locationInformation: Record<Location, LocationMeta> = {
+  [Location.ThaiWaegeli]: {
+    endpoint: '/location/thai-waegeli',
+    dynamic: false,
+    getParser: (): ParserFunction => ThaiWaegeliMenu,
+    days: [ WeekDay.Thursday ],
+    info: {
+      name: 'Thai Wägeli',
+      website: 'https://www.thai-waegeli.ch'
+    }
+  },
+  [Location.LoStivale]: {
+    endpoint: '/location/lo-stivale',
+    dynamic: false,
+    getParser: (): ParserFunction => LoStivaleMenu,
+    days: [ WeekDay.Monday ],
+    info: {
+      name: 'Lo Stivale (Pizza Wagen)',
+      website: 'https://www.lostivale.ch/web/index.php'
+    }
+  },
   [Location.Pionier]: {
     endpoint: '/location/pionier',
     dynamic: true,
@@ -41,26 +61,6 @@ export const locationInformation: Record<Location, LocationMeta> = {
     info: {
       name: 'Eurest Cafeteria Technopark',
       website: 'https://tpw.ch/angebot/essen-trinken/'
-    }
-  },
-  [Location.ThaiWaegeli]: {
-    endpoint: '/location/thai-waegeli',
-    dynamic: false,
-    getParser: (): ParserFunction => ThaiWaegeliMenu,
-    days: [ WeekDay.Thursday ],
-    info: {
-      name: 'Thai Wägeli',
-      website: 'https://www.thai-waegeli.ch'
-    }
-  },
-  [Location.LoStivale]: {
-    endpoint: '/location/lo-stivale',
-    dynamic: false,
-    getParser: (): ParserFunction => LoStivaleMenu,
-    days: [ WeekDay.Monday ],
-    info: {
-      name: 'Lo Stivale (Pizza Wagen)',
-      website: 'https://www.lostivale.ch/web/index.php'
     }
   },
   [Location.CoopRestaurantLokwerk]: {
