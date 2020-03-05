@@ -1,12 +1,14 @@
 import { LocationMenu, WeekDay } from './sharedModels';
 import { parseMenu as ThaiWaegeliMenu } from './locations/thaiWaegeli';
+import { parseMenu as LoStivaleMenu } from './locations/loStivale';
 
 // These are used as the database key, do not change!
 export enum Location {
   Pionier = 'pionier',
   Skillspark = 'skillspark',
   EurestCafeteria = 'eurestCafeteria',
-  ThaiWaegeli = 'thaiWaegeli'
+  ThaiWaegeli = 'thaiWaegeli',
+  LoStivale = 'loStivale'
 }
 
 export const locationInformation: Record<Location, LocationMeta> = {
@@ -48,6 +50,16 @@ export const locationInformation: Record<Location, LocationMeta> = {
     info: {
       name: 'Thai Wägeli',
       website: 'https://www.thai-waegeli.ch'
+    }
+  },
+  [Location.LoStivale]: {
+    endpoint: '/location/lo-stivale',
+    dynamic: false,
+    getParser: (): ParserFunction => LoStivaleMenu,
+    days: [ WeekDay.Monday ],
+    info: {
+      name: 'Lo Stivale (Pizza Wagen)',
+      website: 'https://www.lostivale.ch/web/index.php'
     }
   }
 };
