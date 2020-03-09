@@ -9,6 +9,7 @@ export enum Location {
   EurestCafeteria = 'eurestCafeteria',
   CoopRestaurantLokwerk = 'coopRestaurantLokwerk',
   CafeteriaTrichtersaal = 'cafeteriaTrichtersaal',
+  CafeteriaBibliothek = 'cafeteriaBibliothek',
   ThaiWaegeli = 'thaiWaegeli',
   LoStivale = 'loStivale'
 }
@@ -72,12 +73,29 @@ export const locationInformation: Record<Location, LocationMeta> = {
   [Location.CafeteriaTrichtersaal]: {
     endpoint: '/location/cafeteria-trichtersaal',
     dynamic: true,
-    getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "cafeteriaTrichtersaalParser" */'./locations/cafeteriaTrichtersaal')).parseMenu,
-    parserParameters: {},
+    getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "zhawRestaurantsParser" */'./locations/zhawRestaurants')).parseMenu,
+    parserParameters: {
+      entryUrl: 'https://trichtersaal.sv-restaurant.ch/de/menuplan/',
+      databaseKey: Location.CafeteriaTrichtersaal
+    },
     days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
     info: {
-      name: 'Cafeteria Trichtersaal',
+      name: 'Cafeteria Trichtersaal (ZHAW)',
       website: 'https://trichtersaal.sv-restaurant.ch/de/menuplan/'
+    }
+  },
+  [Location.CafeteriaBibliothek]: {
+    endpoint: '/location/cafeteria-bibliothek',
+    dynamic: true,
+    getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "zhawRestaurantsParser" */'./locations/zhawRestaurants')).parseMenu,
+    parserParameters: {
+      entryUrl: 'https://bibliothek.sv-restaurant.ch/de/menuplan/',
+      databaseKey: Location.CafeteriaBibliothek
+    },
+    days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
+    info: {
+      name: 'Cafeteria Bibliothek (ZHAW)',
+      website: 'https://bibliothek.sv-restaurant.ch/de/menuplan/'
     }
   },
   [Location.CoopRestaurantLokwerk]: {

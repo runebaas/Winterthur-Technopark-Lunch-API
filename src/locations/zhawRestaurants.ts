@@ -6,8 +6,11 @@ import { addMenusToDb, getMenusFromDb } from '../utils/db';
 import { Location, ParserArguments } from '../locations';
 
 export async function parseMenu(args: ParserArguments): Promise<LocationMenu[]> {
-  const { date } = args;
-  const { data: rawHtml } = await axios.get<string>('https://trichtersaal.sv-restaurant.ch/de/menuplan/');
+  const { date, parameters } = args;
+  const entryUrl = parameters.entryUrl as string;
+  const databaseKey = parameters.databaseKey as Location;
+
+  const { data: rawHtml } = await axios.get<string>(entryUrl);
 
   const document = cheerio.load(rawHtml);
 
@@ -51,8 +54,8 @@ export async function parseMenu(args: ParserArguments): Promise<LocationMenu[]> 
 
       complete.push(menuData);
     }
-    addMenusToDb(Location.CafeteriaTrichtersaal, dates[tabId], complete);
+    addMenusToDb(databaseKey, dates[tabId], complete);
   });
 
-  return await getMenusFromDb(Location.CafeteriaTrichtersaal, date) ?? [];
+  return await getMenusFromDb(databaseKey, date) ?? [];
 }
