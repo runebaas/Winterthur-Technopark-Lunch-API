@@ -42,7 +42,11 @@ export class LocationsController {
 
       if (!menus) {
         const parser = await locationData.getParser();
-        menus = await parser(date, formattedDate);
+        menus = await parser({
+          date: date,
+          formattedDate: formattedDate,
+          parameters: locationData.parserParameters
+        });
       }
     }
 

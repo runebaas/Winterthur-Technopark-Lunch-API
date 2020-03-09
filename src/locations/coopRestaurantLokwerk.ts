@@ -5,9 +5,10 @@ import { parse } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { LocationMenu } from '../sharedModels';
 import { addMenusToDb } from '../utils/db';
-import { Location } from '../locations';
+import { Location, ParserArguments } from '../locations';
 
-export async function parseMenu(date: Date): Promise<LocationMenu[]> {
+export async function parseMenu(args: ParserArguments): Promise<LocationMenu[]> {
+  const { date } = args;
   const { data: rawHtml } = await axios.get<string>('https://www.coop-restaurant.ch/de/menueseite.vst4221.restaurant.html');
 
   const dayToGet = date.getDay();

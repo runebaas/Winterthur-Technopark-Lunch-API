@@ -3,9 +3,10 @@ import * as cheerio from 'cheerio';
 import { parse } from 'date-fns';
 import { LocationMenu } from '../sharedModels';
 import { addMenusToDb, getMenusFromDb } from '../utils/db';
-import { Location } from '../locations';
+import { Location, ParserArguments } from '../locations';
 
-export async function parseMenu(date: Date): Promise<LocationMenu[]> {
+export async function parseMenu(args: ParserArguments): Promise<LocationMenu[]> {
+  const { date } = args;
   const { data: rawHtml } = await axios.get<string>('https://trichtersaal.sv-restaurant.ch/de/menuplan/');
 
   const document = cheerio.load(rawHtml);

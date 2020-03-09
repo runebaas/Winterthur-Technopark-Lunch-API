@@ -5,7 +5,7 @@ import deLocale from 'date-fns/locale/de';
 import { LocationMenu } from '../sharedModels';
 import { loadWasm } from '../utils/wasmLoader';
 import { addMenusToDb, getMenusFromDb } from '../utils/db';
-import { Location } from '../locations';
+import { Location, ParserArguments } from '../locations';
 
 async function findPdf(): Promise<string> {
   const sourcePage = 'https://tpw.ch/angebot/essen-trinken/';
@@ -18,7 +18,8 @@ async function findPdf(): Promise<string> {
     .attr('href') ?? '';
 }
 
-export async function parseMenu(date: Date): Promise<LocationMenu[]> {
+export async function parseMenu(args: ParserArguments): Promise<LocationMenu[]> {
+  const { date } = args;
   const pdfUrl = await findPdf();
   if (!pdfUrl) {
     return [];

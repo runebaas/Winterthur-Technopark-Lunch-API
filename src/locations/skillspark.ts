@@ -4,9 +4,10 @@ import deLocale from 'date-fns/locale/de';
 import { LocationMenu } from '../sharedModels';
 import { loadWasm } from '../utils/wasmLoader';
 import { addMenusToDb, getMenusFromDb } from '../utils/db';
-import { Location } from '../locations';
+import { Location, ParserArguments } from '../locations';
 
-export async function parseMenu(date: Date): Promise<LocationMenu[]> {
+export async function parseMenu(args: ParserArguments): Promise<LocationMenu[]> {
+  const { date } = args;
   const { parseSkillsparkPdf } = await loadWasm();
 
   const docBuffer = await axios.get<ArrayBuffer>('https://skillspark.ch/images/menu.pdf', { responseType: 'arraybuffer' });

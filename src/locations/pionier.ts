@@ -2,9 +2,11 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { LocationMenu } from '../sharedModels';
 import { addMenusToDb } from '../utils/db';
-import { Location } from '../locations';
+import { Location, ParserArguments } from '../locations';
 
-export async function parseMenu(date: Date, formattedDate: string): Promise<LocationMenu[]> {
+export async function parseMenu(args: ParserArguments): Promise<LocationMenu[]> {
+  const { date, formattedDate } = args;
+
   const res = await axios.get('https://zfv.ch/de/microsites/restaurant-pionier/menueplan');
 
   const document = cheerio.load(res.data);

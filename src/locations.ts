@@ -18,6 +18,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
     endpoint: '/location/thai-waegeli',
     dynamic: false,
     getParser: (): ParserFunction => ThaiWaegeliMenu,
+    parserParameters: {},
     days: [ WeekDay.Thursday ],
     info: {
       name: 'Thai Wägeli',
@@ -28,6 +29,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
     endpoint: '/location/lo-stivale',
     dynamic: false,
     getParser: (): ParserFunction => LoStivaleMenu,
+    parserParameters: {},
     days: [ WeekDay.Monday ],
     info: {
       name: 'Lo Stivale (Pizza Wagen)',
@@ -38,6 +40,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
     endpoint: '/location/pionier',
     dynamic: true,
     getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "pionierParser" */'./locations/pionier')).parseMenu,
+    parserParameters: {},
     days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
     info: {
       name: 'Kantine Pionier (AXA)',
@@ -48,6 +51,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
     endpoint: '/location/skillspark',
     dynamic: true,
     getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "skillsparkParser" */'./locations/skillspark')).parseMenu,
+    parserParameters: {},
     days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
     info: {
       name: 'Kantine Skills Park',
@@ -58,6 +62,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
     endpoint: '/location/eurest-cafeteria',
     dynamic: true,
     getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "eurestCafeteriaParser" */'./locations/eurestCafeteria')).parseMenu,
+    parserParameters: {},
     days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
     info: {
       name: 'Eurest Cafeteria Technopark',
@@ -68,6 +73,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
     endpoint: '/location/cafeteria-trichtersaal',
     dynamic: true,
     getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "cafeteriaTrichtersaalParser" */'./locations/cafeteriaTrichtersaal')).parseMenu,
+    parserParameters: {},
     days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
     info: {
       name: 'Cafeteria Trichtersaal',
@@ -78,6 +84,7 @@ export const locationInformation: Record<Location, LocationMeta> = {
     endpoint: '/location/coop-restaurant-lokwerk',
     dynamic: true,
     getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "coopRestaurantLokwerkParser" */'./locations/coopRestaurantLokwerk')).parseMenu,
+    parserParameters: {},
     days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday, WeekDay.Saturday ],
     info: {
       name: 'Coop Restaurant Lokwerk',
@@ -86,16 +93,24 @@ export const locationInformation: Record<Location, LocationMeta> = {
   }
 };
 
+type ParserParameters = Record<string, unknown>;
+type ParserFunctionAsync = Promise<(args: ParserArguments) => Promise<LocationMenu[]>>;
+type ParserFunction = (args: ParserArguments) => LocationMenu[];
+
 export interface LocationMeta {
   endpoint: string;
   dynamic: boolean;
   getParser: () => (ParserFunctionAsync|ParserFunction);
+  parserParameters: ParserParameters;
   days: WeekDay[];
   info: LocationInformation;
 }
 
-type ParserFunctionAsync = Promise<(date: Date, formattedDate: string) => Promise<LocationMenu[]>>;
-type ParserFunction = (date: Date, formattedDate: string) => LocationMenu[];
+export interface ParserArguments {
+  date: Date;
+  formattedDate: string;
+  parameters: ParserParameters;
+}
 
 export interface LocationInformation {
   name: string;
