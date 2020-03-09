@@ -13,7 +13,6 @@ export async function parseMenu(date: Date): Promise<LocationMenu[]> {
 
   const result = await parseSkillsparkPdf(new Uint8Array(docBuffer.data));
   const weeklyMenus = JSON.parse(result) as Week;
-
   const daily: LocationMenu[] = [];
   for (const item of weeklyMenus.taglich) {
     const itemRegexResult = item.match(/(?<name>.+)\s(?<price>CHF\s*\d+.\d+)/u);
@@ -28,7 +27,11 @@ export async function parseMenu(date: Date): Promise<LocationMenu[]> {
   }
 
   for (const day of [ weeklyMenus.montag, weeklyMenus.dienstag, weeklyMenus.mitwoch, weeklyMenus.donnerstag, weeklyMenus.freitag ]) {
-    const dayDate = parse(day.tag, 'EEEE dd. LLLL yyyy', Date.now(), { locale: deLocale });
+    console.info(day);
+    let dayDate = parse(day.tag.trim(), 'EEEE dd. LLLL yyyy', Date.now(), { locale: deLocale });
+    if(dayDate.toString() === 'Invalid Date') {
+      dayDate = parse(day.tag.trim(), 'EEEE dd LLLL yyyy', Date.now(), { locale: deLocale });
+    }
     const menus: LocationMenu[] = [];
 
     for (const menu of [ day.traditionell, day.vegetarisch ]) {
