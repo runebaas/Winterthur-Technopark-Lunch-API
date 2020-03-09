@@ -8,6 +8,7 @@ export enum Location {
   Skillspark = 'skillspark',
   EurestCafeteria = 'eurestCafeteria',
   CoopRestaurantLokwerk = 'coopRestaurantLokwerk',
+  CafeteriaTrichtersaal = 'cafeteriaTrichtersaal',
   ThaiWaegeli = 'thaiWaegeli',
   LoStivale = 'loStivale'
 }
@@ -61,6 +62,16 @@ export const locationInformation: Record<Location, LocationMeta> = {
     info: {
       name: 'Eurest Cafeteria Technopark',
       website: 'https://tpw.ch/angebot/essen-trinken/'
+    }
+  },
+  [Location.CafeteriaTrichtersaal]: {
+    endpoint: '/location/cafeteria-trichtersaal',
+    dynamic: true,
+    getParser: async (): ParserFunctionAsync => (await import(/* webpackChunkName: "cafeteriaTrichtersaalParser" */'./locations/cafeteriaTrichtersaal')).parseMenu,
+    days: [ WeekDay.Monday, WeekDay.Tuesday, WeekDay.Wednesday, WeekDay.Thursday, WeekDay.Friday ],
+    info: {
+      name: 'Cafeteria Trichtersaal',
+      website: 'https://trichtersaal.sv-restaurant.ch/de/menuplan/'
     }
   },
   [Location.CoopRestaurantLokwerk]: {
