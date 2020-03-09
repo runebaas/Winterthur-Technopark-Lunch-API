@@ -4,7 +4,7 @@ export function parseMenu(): LocationMenu[] {
   return [
     {
       name: 'Div. Pizzas',
-      price: '13Fr bis 18Fr',
+      price: 'CHF 12 bis CHF 15',
       details: []
     }
   ];
