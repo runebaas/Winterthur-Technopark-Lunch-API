@@ -1,6 +1,6 @@
-import {LocationMenu, WeekDay} from './sharedModels';
-import {parseMenu as ThaiWaegeliMenu} from './locations/thaiWaegeli';
-import {parseMenu as LoStivaleMenu} from './locations/loStivale';
+import { LocationMenu, WeekDay } from './sharedModels';
+import { parseMenu as ThaiWaegeliMenu } from './locations/thaiWaegeli';
+import { parseMenu as LoStivaleMenu } from './locations/loStivale';
 
 // These are used as the database key, do not change!
 export enum Location {

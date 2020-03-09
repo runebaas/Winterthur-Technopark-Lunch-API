@@ -1,11 +1,11 @@
 /* eslint-disable prefer-destructuring */
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import {parse} from 'date-fns';
-import {de} from 'date-fns/locale';
-import {LocationMenu} from '../sharedModels';
-import {addMenusToDb} from '../utils/db';
-import {Location} from "../locations";
+import { parse } from 'date-fns';
+import { de } from 'date-fns/locale';
+import { LocationMenu } from '../sharedModels';
+import { addMenusToDb } from '../utils/db';
+import { Location } from '../locations';
 
 export async function parseMenu(date: Date): Promise<LocationMenu[]> {
   const { data: rawHtml } = await axios.get<string>('https://www.coop-restaurant.ch/de/menueseite.vst4221.restaurant.html');
@@ -49,7 +49,7 @@ export async function parseMenu(date: Date): Promise<LocationMenu[]> {
     const menuType = info.childNodes[1].childNodes[1].childNodes[1].attribs.alt;
     const price = info.childNodes[3].childNodes[1].childNodes[0].data?.trim();
 
-    const menuDetails = data.childNodes[3].childNodes[1].childNodes?.filter(e => e.type === 'text')?.map(e => e.data?.trim()) ?? [];
+    const menuDetails = data.childNodes[3].childNodes[1].childNodes?.filter(element => element.type === 'text')?.map(element => element.data?.trim()) ?? [];
 
     menus.push({
       name: menuType,

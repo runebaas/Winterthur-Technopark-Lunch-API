@@ -29,7 +29,7 @@ export async function parseMenu(date: Date): Promise<LocationMenu[]> {
   for (const day of [ weeklyMenus.montag, weeklyMenus.dienstag, weeklyMenus.mitwoch, weeklyMenus.donnerstag, weeklyMenus.freitag ]) {
     console.info(day);
     let dayDate = parse(day.tag.trim(), 'EEEE dd. LLLL yyyy', Date.now(), { locale: deLocale });
-    if(dayDate.toString() === 'Invalid Date') {
+    if (dayDate.toString() === 'Invalid Date') {
       dayDate = parse(day.tag.trim(), 'EEEE dd LLLL yyyy', Date.now(), { locale: deLocale });
     }
     const menus: LocationMenu[] = [];
